@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'image/favicon.ico' %}">
+    <title>Regular-Relationship-Recognition </title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+ </head>
+
+  <body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">HOMIPROGRAMMINDASTRY</a>
+      <input id="input" class="form-control form-control-dark w-100" type="text" placeholder="Введите регулярное выражение" aria-label="Search">
+        <script>
+            input.oninput = function(){
+                var search_value = new String(input.value);
+                var text = document.getElementById("MainText");
+                let quest = {
+                    regex: search_value,
+                    text: text.value
+                };
+
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/regex/get_result", true);
+                xhr.onload = () => {
+                if (xhr.status == 200) {
+                    console.log(xhr.responseText);
+                    const list = document.getElementById("list");
+                    response_data = JSON.parse(xhr.responseText);
+
+                    let ResaultsPull =  response_data['results'];
+
+                    list.innerHTML = `<div id = 'list'> <h2>Результат</h2>
+          <div class="table-responsive">`;
+                    ResaultsPull.forEach(function(item, index, array){
+                    list.innerHTML += `${item}<br>` ;
+                    });
+                      list.innerHTML +=   `        </div>
+</div>` ;
+                } else {
+                    console.log("Server response: ", xhr.statusText);
+                }
+            };
+                xhr.send(JSON.stringify(quest));
+                console.log(JSON.parse(JSON.stringify(quest)));
+            };
+        </script>
+
+
+
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="#">Поддержать</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+
+                  Dashboard <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                  <h2>Основы</h2>
+                  <p>Регулярное выражение – это комбинация символов и метасимволов. Из метасимволов доступны следующие:</p>
+                  <ul><li><code>\</code> используется для игнорирования специального значения символа</li><li><code>[]</code> указывает на класс символов. Например: [a-z] — все буквы латинского алфавита в нижнем регистре, [a-zA-Z0-9] — все буквы в обоих регистрах плюс цифры</li><li><code>^</code> соответствует началу текста</li><li><code>$</code> обозначает конец текста</li><li><code>.</code> соответствует любому символу, кроме символа новой строки</li><li><code>?</code> обозначает одно или ноль вхождений</li><li><code>|</code> означает ИЛИ (совпадение с любым из символов, разделенных им)</li><li><code>*</code> любое количество вхождений (включая 0 вхождений)</li><li><code>+</code> одно и более вхождений</li><li><code>{}</code> указывает на несколько совпадений предыдущего RE.</li><li><code>()</code> отделяет группу в регулярном выражении</li></ul>
+                  <p>Обратная косая черта (backslash) <code>\</code> используется в сочетании с другими символами и тогда приобретает особые значения. Если же необходимо использовать backslash просто как символ, без учета специального значения, его нужно «экранировать» еще одной обратной косой чертой – <code>\\</code>. Что касается специальных значений:</p>
+                  <ul><li><code>\d</code> соответствует любой десятичной цифре, это то же самое, что и [0-9]</li><li><code>\D</code> соответствует любому нечисловому символу</li><li><code>\s</code> соответствует любому пробельному символу</li><li><code>\S</code> соответствует любому не пробельному символу</li><li><code>\w</code> соответствует любому буквенно-числовому символу; это то же самое, что и [a-zA-Z0-9_].</li><li><code>\W</code> соответствует любому не буквенно-числовому символу.</li></ul>
+
+              </li>
+            </ul>
+
+
+
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+
+
+         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">Тестовое поле</h1>
+
+          </div>
+
+           <textarea class="form-control" id="MainText" rows="9"></textarea>
+          <div id = 'list'>
+
+</div>
+
+        </main>
+
+      </div>
+    </div>
+</body></html>
